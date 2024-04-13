@@ -98,7 +98,7 @@
         audioIcon.style.cursor = 'pointer';
         audioIcon.style.fontSize = '23px';
         audioIcon.onclick = function() {
-            recordAndSaveAudio(icon);
+            recordAndSaveAudio(icon, audioVerwerfenButton);
         };
         clearAndAudioDiv.appendChild(audioIcon);
 
@@ -109,17 +109,18 @@
         // Audio verwerfen Button
         var audioVerwerfenButton = document.createElement('button');
         audioVerwerfenButton.appendChild(document.createTextNode('Audio verwerfen'));
-        audioVerwerfenButton.classList.add('aui-button');
+        audioVerwerfenButton.classList.add('aui-button', 'disabled');
+        audioVerwerfenButton.ariaDisabled = 'true';
         audioVerwerfenButton.style.marginLeft = '10px';
         audioVerwerfenButton.onclick = function() {
-            abortAudioRecording(icon);
+            abortAudioRecording(icon, audioVerwerfenButton);
         };
         clearAndAudioDiv.insertBefore(audioVerwerfenButton, clearButton);
 
         // Löschen-Button
         var clearButton = document.createElement('button');
         clearButton.appendChild(document.createTextNode('Text löschen'));
-        clearButton.classList.add('aui-button');
+        clearButton.classList.add('aui-button' , 'clear-button');
         clearButton.style.marginLeft = '10px';
         clearButton.onclick = function() {
             clearTextField();
@@ -159,6 +160,20 @@
         iconDragAndDrop.style.left = '10px';
         iconDragAndDrop.style.fontSize = '20px';
         box.appendChild(iconDragAndDrop);
+
+        // Erstelle bug-reporting Button
+        var bugReportButton = document.createElement('i');
+        bugReportButton.style.position = 'absolute';
+        bugReportButton.className = 'fa-solid fa-bug';
+        bugReportButton.style.bottom = '15px';
+        bugReportButton.style.right = '15px';
+        bugReportButton.style.fontSize = '20px';
+        bugReportButton.style.cursor = 'pointer';
+        bugReportButton.onclick = function() {
+           window.open('https://github.com/ASidorenkoCode/TampermonkeyJVGUI/issues/new/choose', '_blank');
+        };
+
+        box.appendChild(bugReportButton);
 
         // Hinzufügen der Box zum Dokument
         document.body.appendChild(box);
@@ -233,12 +248,14 @@
     var chunks = [];
     var isAborted = false;
 
-    function recordAndSaveAudio(icon) {
+    function recordAndSaveAudio(icon, audioVerwerfenButton) {
         if (!mediaRecorder) {
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(function(stream) {
                 mediaRecorder = new MediaRecorder(stream);
                 isAborted = false;
+                audioVerwerfenButton.classList.remove('disabled');
+                audioVerwerfenButton.ariaDisabled = 'false';
                 mediaRecorder.start();
 
                 mediaRecorder.ondataavailable = function(e) {
@@ -275,12 +292,14 @@
     }
 
 
-    function abortAudioRecording(audioIcon) {
+    function abortAudioRecording(audioIcon, audioVerwerfenButton) {
         if (mediaRecorder && mediaRecorder.state === 'recording') {
             isAborted = true;
             mediaRecorder.stop();
             mediaRecorder = null;
             audioIcon.style.color = 'black';
+            audioVerwerfenButton.classList.add('disabled');
+            audioVerwerfenButton.ariaDisabled = 'true';
         }
     }
 
@@ -292,6 +311,7 @@
         var textField = document.querySelector('#jql-voice-box textarea');
         textField.value = '';
     }
+
 
     setTimeout(function() {
         var saveAsButton = document.querySelector('.save-as-new-filter');
