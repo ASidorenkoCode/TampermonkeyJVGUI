@@ -120,7 +120,7 @@
         // Löschen-Button
         var clearButton = document.createElement('button');
         clearButton.appendChild(document.createTextNode('Text löschen'));
-        clearButton.classList.add('aui-button');
+        clearButton.classList.add('aui-button' , 'clear-button');
         clearButton.style.marginLeft = '10px';
         clearButton.onclick = function() {
             clearTextField();
@@ -297,6 +297,7 @@
         var textField = document.querySelector('#jql-voice-box textarea');
         textField.value = '';
     }
+
 
     setTimeout(function() {
         var saveAsButton = document.querySelector('.save-as-new-filter');
