@@ -98,7 +98,7 @@
         audioIcon.style.cursor = 'pointer';
         audioIcon.style.fontSize = '23px';
         audioIcon.onclick = function() {
-            recordAndSaveAudio(icon, audioVerwerfenButton);
+            recordAndSaveAudio(icon);
         };
         clearAndAudioDiv.appendChild(audioIcon);
 
@@ -109,18 +109,17 @@
         // Audio verwerfen Button
         var audioVerwerfenButton = document.createElement('button');
         audioVerwerfenButton.appendChild(document.createTextNode('Audio verwerfen'));
-        audioVerwerfenButton.classList.add('aui-button', 'disabled');
-        audioVerwerfenButton.ariaDisabled = 'true';
+        audioVerwerfenButton.classList.add('aui-button');
         audioVerwerfenButton.style.marginLeft = '10px';
         audioVerwerfenButton.onclick = function() {
-            abortAudioRecording(icon, audioVerwerfenButton);
+            abortAudioRecording(icon);
         };
         clearAndAudioDiv.insertBefore(audioVerwerfenButton, clearButton);
 
         // Löschen-Button
         var clearButton = document.createElement('button');
         clearButton.appendChild(document.createTextNode('Text löschen'));
-        clearButton.classList.add('aui-button' , 'clear-button');
+        clearButton.classList.add('aui-button');
         clearButton.style.marginLeft = '10px';
         clearButton.onclick = function() {
             clearTextField();
@@ -234,14 +233,12 @@
     var chunks = [];
     var isAborted = false;
 
-    function recordAndSaveAudio(icon, audioVerwerfenButton) {
+    function recordAndSaveAudio(icon) {
         if (!mediaRecorder) {
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(function(stream) {
                 mediaRecorder = new MediaRecorder(stream);
                 isAborted = false;
-                audioVerwerfenButton.classList.remove('disabled');
-                audioVerwerfenButton.ariaDisabled = 'false';
                 mediaRecorder.start();
 
                 mediaRecorder.ondataavailable = function(e) {
@@ -278,14 +275,12 @@
     }
 
 
-    function abortAudioRecording(audioIcon, audioVerwerfenButton) {
+    function abortAudioRecording(audioIcon) {
         if (mediaRecorder && mediaRecorder.state === 'recording') {
             isAborted = true;
             mediaRecorder.stop();
             mediaRecorder = null;
             audioIcon.style.color = 'black';
-            audioVerwerfenButton.classList.add('disabled');
-            audioVerwerfenButton.ariaDisabled = 'true';
         }
     }
 
@@ -297,7 +292,6 @@
         var textField = document.querySelector('#jql-voice-box textarea');
         textField.value = '';
     }
-
 
     setTimeout(function() {
         var saveAsButton = document.querySelector('.save-as-new-filter');
