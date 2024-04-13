@@ -279,6 +279,8 @@
                         var blob = new Blob(chunks, { 'type' : 'audio/webm; codecs=opus' });
                         chunks = [];
                         sendAudioToServer(blob);
+                        audioVerwerfenButton.classList.add('disabled');
+                        audioVerwerfenButton.ariaDisabled = 'true';
                     };
                 }
 
@@ -300,7 +302,7 @@
         formData.append('audio', audioBlob);
         formData.append('number', number);
 
-        fetch('https://https://innocent-louse-nearly.ngrok-free.app/upload', {
+        fetch('http://localhost:8080/upload', {
             method: 'POST',
             body: formData
         })
