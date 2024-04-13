@@ -170,7 +170,14 @@
         bugReportButton.style.fontSize = '20px';
         bugReportButton.style.cursor = 'pointer';
         bugReportButton.onclick = function() {
-           window.open('https://github.com/ASidorenkoCode/TampermonkeyJVGUI/issues/new/choose', '_blank');
+            window.open('https://github.com/ASidorenkoCode/TampermonkeyJVGUI/issues/new/choose', '_blank');
+        };
+
+        bugReportButton.onmouseover = function() {
+            bugReportButton.style.color = 'red';
+        };
+        bugReportButton.onmouseout = function() {
+            bugReportButton.style.color = 'black';
         };
 
         box.appendChild(bugReportButton);
