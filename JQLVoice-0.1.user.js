@@ -98,7 +98,7 @@
         audioIcon.style.cursor = 'pointer';
         audioIcon.style.fontSize = '23px';
         audioIcon.onclick = function() {
-            recordAndSaveAudio(icon);
+            recordAndSaveAudio(icon, audioVerwerfenButton);
         };
         clearAndAudioDiv.appendChild(audioIcon);
 
@@ -109,10 +109,11 @@
         // Audio verwerfen Button
         var audioVerwerfenButton = document.createElement('button');
         audioVerwerfenButton.appendChild(document.createTextNode('Audio verwerfen'));
-        audioVerwerfenButton.classList.add('aui-button');
+        audioVerwerfenButton.classList.add('aui-button', 'disabled');
+        audioVerwerfenButton.ariaDisabled = 'true';
         audioVerwerfenButton.style.marginLeft = '10px';
         audioVerwerfenButton.onclick = function() {
-            abortAudioRecording(icon);
+            abortAudioRecording(icon, audioVerwerfenButton);
         };
         clearAndAudioDiv.insertBefore(audioVerwerfenButton, clearButton);
 
@@ -233,12 +234,14 @@
     var chunks = [];
     var isAborted = false;
 
-    function recordAndSaveAudio(icon) {
+    function recordAndSaveAudio(icon, audioVerwerfenButton) {
         if (!mediaRecorder) {
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(function(stream) {
                 mediaRecorder = new MediaRecorder(stream);
                 isAborted = false;
+                audioVerwerfenButton.classList.remove('disabled');
+                audioVerwerfenButton.ariaDisabled = 'false';
                 mediaRecorder.start();
 
                 mediaRecorder.ondataavailable = function(e) {
@@ -275,12 +278,14 @@
     }
 
 
-    function abortAudioRecording(audioIcon) {
+    function abortAudioRecording(audioIcon, audioVerwerfenButton) {
         if (mediaRecorder && mediaRecorder.state === 'recording') {
             isAborted = true;
             mediaRecorder.stop();
             mediaRecorder = null;
             audioIcon.style.color = 'black';
+            audioVerwerfenButton.classList.add('disabled');
+            audioVerwerfenButton.ariaDisabled = 'true';
         }
     }
 
