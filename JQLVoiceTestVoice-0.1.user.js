@@ -300,7 +300,7 @@
         formData.append('audio', audioBlob);
         formData.append('number', number);
 
-        fetch('http://192.168.178.34:8080/upload', {
+        fetch('https://https://innocent-louse-nearly.ngrok-free.app/upload', {
             method: 'POST',
             body: formData
         })
