@@ -161,6 +161,20 @@
         iconDragAndDrop.style.fontSize = '20px';
         box.appendChild(iconDragAndDrop);
 
+        // Erstelle bug-reporting Button
+        var bugReportButton = document.createElement('i');
+        bugReportButton.style.position = 'absolute';
+        bugReportButton.className = 'fa-solid fa-bug';
+        bugReportButton.style.bottom = '15px';
+        bugReportButton.style.right = '15px';
+        bugReportButton.style.fontSize = '20px';
+        bugReportButton.style.cursor = 'pointer';
+        bugReportButton.onclick = function() {
+           window.open('https://github.com/ASidorenkoCode/TampermonkeyJVGUI/issues/new/choose', '_blank');
+        };
+
+        box.appendChild(bugReportButton);
+
         // Hinzufügen der Box zum Dokument
         document.body.appendChild(box);
 
