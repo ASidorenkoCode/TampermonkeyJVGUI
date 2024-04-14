@@ -278,12 +278,12 @@
                     if(!isAborted) {
                         var blob = new Blob(chunks, { 'type' : 'audio/webm; codecs=opus' });
                         chunks = [];
-                        sendAudioToServer(blob);
+                        var filename = 'audio_' + Math.floor(Math.random() * 1000000) + 1;
+                        sendAudioToServer(blob, filename);
                         audioVerwerfenButton.classList.add('disabled');
                         audioVerwerfenButton.ariaDisabled = 'true';
                     };
                 }
-
 
                 icon.style.color = 'red';
             });
@@ -297,10 +297,9 @@
     }
 
     function sendAudioToServer(audioBlob) {
-        var number = Math.floor(Math.random() * 1000000) + 1; // Generate a random number between 1 and 1000000
         var formData = new FormData();
         formData.append('audio', audioBlob);
-        formData.append('number', number);
+        formData.append('number', Math.floor(Math.random() * 1000000) + 1);
 
         fetch('http://localhost:8080/upload', {
             method: 'POST',
@@ -313,17 +312,37 @@
             return response.json(); // Parse JSON response
         })
             .then(data => {
-            // Extract transcribed text from the response
+            // Extract transcribed text and JQL query code from the response
             var transcribedText = data.transcribed_text;
+            var jqlQueryCode = data.jql_query_code;
+
             // Assuming textarea has class 'transcriptionTextArea'
             var textArea = document.getElementsByClassName('transcriptionTextArea')[0];
-            textArea.value = transcribedText;
-            console.log('Transcribed text updated in textarea');
+            if (transcribedText) {
+                textArea.value = transcribedText;
+                console.log('Transcribed text updated in textarea');
+            }
+
+            // Find the parent div with aria-label
+            var parentDiv = document.querySelector('div[aria-label="JQL-Abfrage"]');
+            if (parentDiv && jqlQueryCode) {
+                // Find the child <p> element and insert the JQL query code
+                var jqlParagraph = parentDiv.querySelector('p');
+                if (jqlParagraph) {
+                    jqlParagraph.textContent = jqlQueryCode;
+                    console.log('JQL query code updated in textarea');
+                } else {
+                    console.error('No <p> element found inside the parent div');
+                }
+            } else {
+                console.error('Parent div with aria-label not found or no JQL query code received');
+            }
         })
             .catch(error => {
             console.error('Error sending audio:', error);
         });
     }
+
 
     function abortAudioRecording(audioIcon, audioVerwerfenButton) {
         if (mediaRecorder && mediaRecorder.state === 'recording') {
