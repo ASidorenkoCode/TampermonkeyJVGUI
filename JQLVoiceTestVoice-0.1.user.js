@@ -6,7 +6,6 @@
 // @description  JQLVoice GUI ohne AI-Funktionalität
 // @match      https://jira.ppi.de/issues/*
 // @match      https://jira.ppi.de/browse/*?jql=*
-// @match      https://asidorenkocode.atlassian.net/issues/*
 // @require    https://kit.fontawesome.com/79a77d7414.js
 // @grant      none
 // ==/UserScript==
@@ -323,19 +322,12 @@
                 console.log('Transcribed text updated in textarea');
             }
 
-            // Find the parent div with aria-label
-            var parentDiv = document.querySelector('div[aria-label="JQL-Abfrage"]');
-            if (parentDiv && jqlQueryCode) {
-                // Find the child <p> element and insert the JQL query code
-                var jqlParagraph = parentDiv.querySelector('p');
-                if (jqlParagraph) {
-                    jqlParagraph.textContent = jqlQueryCode;
-                    console.log('JQL query code updated in textarea');
-                } else {
-                    console.error('No <p> element found inside the parent div');
-                }
+            var textAreaJQL = document.getElementById('advanced-search');
+            if (jqlQueryCode) {
+                textAreaJQL.value = jqlQueryCode;
+                console.log('JQL query code updated in textarea');
             } else {
-                console.error('Parent div with aria-label not found or no JQL query code received');
+                console.error('No JQL query code received');
             }
         })
             .catch(error => {
